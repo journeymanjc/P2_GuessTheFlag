@@ -8,58 +8,122 @@
 import SwiftUI
 
 struct ContentView: View {
-	@State private var showingAlert: Bool = false
+	@State private var userScore = 0
+	@State private var numberOfAttempts = 0
+	@State private var showingFinalResult = false
+	@State private var showingScore = false
+	@State private var scoreTitle = ""
 	
-    var body: some View {
-		 ZStack{
-			 VStack{
-				 Color.red
-				 Color.blue
-				 
-				 VStack{
-					 Button("Button 1"){
-						 showingAlert = true
-						 
-					 }
-					 .buttonStyle(.bordered)
-					 Button("Button 2", role: .destructive){}
-					 .buttonStyle(.bordered)
-					 Button("Button 3", role: .destructive){}
-					 .buttonStyle(.borderedProminent)
-					 
-					 Button{
-						 print("Button was tapped")
-					 } label: {
-						 Text("Tap me!")
-							 .padding()
-							 .foregroundColor(.white)
-							 .background(.red)
-					 }
-					 .alert("Important message", isPresented: $showingAlert){
-						 Button("Delete", role: .destructive) {}
-						 Button("Cancel", role:.cancel) {}
-
-					 } message: {
-						 Text("Hows it going")
-					 }
-				 }
-			 }
-			 
-			 Text("Your Content")
-				 .foregroundStyle(.secondary)
-				 .padding(20)
-				 .background(.ultraThinMaterial)
-			 
-			 
-		 }
-		 
-
-    }
+	@State private var countries = ["Estonia","France","Germany", "Ireland", "Italy",
+						  "Nigeria","Poland","Russia","Spain","UK","US"].shuffled()
+	@State private var correctAnswer = Int.random(in: 0...2)
+	
+	var body: some View {
+		
+		ZStack {
+//			LinearGradient(gradient: Gradient(colors: [Color.blue, Color.black]), startPoint: .top, endPoint: .bottom)
+//				.ignoresSafeArea()
+	
+			RadialGradient(stops: [
+				.init(color: Color(red:0.1, green:0.2, blue:0.45), location: 0.3),
+				.init(color: Color(red:0.76, green:0.15,blue:0.26), location: 0.3),
+			], center: .top, startRadius: 200, endRadius: 700)
+				.ignoresSafeArea()
+			VStack{
+				Spacer()
+				Text("Guess the Flag")
+					.font(.largeTitle.weight(.bold))
+					.foregroundColor(.white)
+				
+				VStack(spacing:15){
+					VStack{
+						Group{
+							Text("Tap the flag of")
+								.font(.subheadline.weight(.heavy))
+								.foregroundStyle(.secondary)
+							Text(countries[correctAnswer])
+								.font(.largeTitle.weight(.semibold))
+						}
+						
+					} //VStack
+					ForEach(0..<3){ number in
+						Button {
+							if numberOfAttempts < 9{
+								flagTapped(number)
+							}else{
+								resetGame()
+							}
+							
+						} label: {
+							Image(countries[number])
+								.renderingMode(.original)
+								.clipShape(Capsule())
+								.shadow(radius: 5)
+						}
+					}
+					
+				} //VSTACK
+				.frame(maxWidth: .infinity)
+				.padding(.vertical, 20)
+				.background(.regularMaterial)
+				.clipShape(RoundedRectangle(cornerRadius: 20))
+				.alert(scoreTitle, isPresented: $showingScore){
+					Button("Continue", action: askQuestion)
+				} message: {
+					Text("Your score is \(userScore)")
+				}
+				.alert(scoreTitle, isPresented: $showingFinalResult){
+					Button("Reset", action: resetGame)
+				} message: {
+					Text("Your final score is \(userScore)")
+				}
+				Spacer()
+				Spacer()
+				Text("Score \(userScore)")
+					.foregroundColor(.white)
+					.font(.title.bold())
+				Spacer()
+			} //VSTACK
+			.padding()
+		} //ZSTACK
+		
+	}
+	
+	func flagTapped(_ number: Int){
+		numberOfAttempts += 1
+		if numberOfAttempts < 8{
+			if number == correctAnswer{
+				scoreTitle = "Correct"
+				userScore += 1
+			}else {
+				scoreTitle = "Wrong That's the flag of \(countries[number])"
+				userScore -= 1
+			}
+			showingScore = true
+		}else{
+			scoreTitle = "Game Over"
+			showingFinalResult = true
+		}
+		
+		
+		
+	}
+	
+	func resetGame(){
+		userScore = 0
+		numberOfAttempts = 0
+		
+	}
+	
+	func askQuestion(){
+		countries.shuffle()
+		correctAnswer = Int.random(in: 0...2)
+	}
 }
 
 struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-			 .previewDevice("iPhone 13 Mini")
-    }
+	static var previews: some View {
+		ContentView()
+			.previewDevice("iPhone 13 Mini")
+	}
 }

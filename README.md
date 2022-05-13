@@ -14,18 +14,14 @@
 ###### Day 21
 - Different Button creation.   
 ```Button("Delete selection", role: .destructive, action: executeDelete)```
-```Button { print("Edit button was tapped") } label: {
-    Label("Edit", systemImage: "pencil")
-}. 
-```
+```Button { print("Edit button was tapped") } label: {.   Label("Edit", systemImage: "pencil")  } ```
+
 - Alert messages. 
-```Button("Show Alert") {
-            showingAlert = true
-        }
+``` Button("Show Alert") {     showingAlert = true.  }
         .alert("Important message", isPresented: $showingAlert) {
             Button("OK") { }
-        }```. 
-        
+        }
+```        
         
 - Some other stuff. 
 ``` .ignoreSafeArea(), .clipShape(), .foreGroundColor(), .foregroundStyle()```. 

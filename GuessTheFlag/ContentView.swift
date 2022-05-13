@@ -13,6 +13,9 @@ struct ContentView: View {
 	@State private var showingFinalResult = false
 	@State private var showingScore = false
 	@State private var scoreTitle = ""
+	@State private var animationAmount = 0.0
+	@State private var flagTapped = 0
+	@State private var fadeInOut = 1.0
 	
 	@State private var countries = ["Estonia","France","Germany", "Ireland", "Italy",
 						  "Nigeria","Poland","Russia","Spain","UK","US"].shuffled()
@@ -32,8 +35,7 @@ struct ContentView: View {
 			VStack{
 				Spacer()
 				Text("Guess the Flag")
-					.font(.largeTitle.weight(.bold))
-					.foregroundColor(.white)
+					.titleStyleBlue()
 				
 				VStack(spacing:15){
 					VStack{
@@ -49,17 +51,23 @@ struct ContentView: View {
 					ForEach(0..<3){ number in
 						Button {
 							if numberOfAttempts < 9{
+								flagTapped = number
+									withAnimation {
+										animationAmount += 360
+										fadeInOut = 0.25
+									}
 								flagTapped(number)
+
 							}else{
 								resetGame()
 							}
 							
 						} label: {
-							Image(countries[number])
-								.renderingMode(.original)
-								.clipShape(Capsule())
-								.shadow(radius: 5)
+							FlagImage(country: countries[number])
 						}
+						.rotation3DEffect(.degrees(flagTapped == number ? animationAmount : 0), axis: (x:0,y:1,z:0))
+						.opacity(flagTapped == number ? 1.0 : fadeInOut )
+
 					}
 					
 				} //VSTACK
@@ -90,6 +98,8 @@ struct ContentView: View {
 	}
 	
 	func flagTapped(_ number: Int){
+		
+
 		numberOfAttempts += 1
 		if numberOfAttempts < 8{
 			if number == correctAnswer{
@@ -120,6 +130,37 @@ struct ContentView: View {
 		correctAnswer = Int.random(in: 0...2)
 	}
 }
+
+
+
+struct FlagImage : View{
+	var country: String
+	
+	var body: some View{
+		Image(country)
+			.renderingMode(.original)
+			.clipShape(Capsule())
+			.shadow(radius: 5)
+	}
+}
+
+
+
+struct BlueTitle: ViewModifier{
+	
+	func body(content: Content) -> some View{
+		content
+			.font(.largeTitle.weight(.bold))
+			.foregroundColor(.blue)
+	}
+}
+
+extension View{
+	func titleStyleBlue() -> some View{
+		modifier(BlueTitle())
+	}
+}
+
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {

@@ -14,6 +14,7 @@
 ###### Day 21
 - Different Button creation.   
 ```Button("Delete selection", role: .destructive, action: executeDelete)```
+-
 ```Button {
     print("Edit button was tapped")
 } label: {

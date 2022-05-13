@@ -19,6 +19,7 @@
 } label: {
     Label("Edit", systemImage: "pencil")
 }```. 
+
 - Alert messages. 
 ```Button("Show Alert") {
             showingAlert = true
@@ -26,6 +27,7 @@
         .alert("Important message", isPresented: $showingAlert) {
             Button("OK") { }
         }```. 
+        
         
 - Some other stuff. 
 ``` .ignoreSafeArea(), .clipShape(), .foreGroundColor(), .foregroundStyle()```. 

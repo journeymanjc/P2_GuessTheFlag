@@ -23,5 +23,5 @@
         }
 ```        
         
-- Some other stuff. 
+- Some other stuff.   
 ``` .ignoreSafeArea(), .clipShape(), .foreGroundColor(), .foregroundStyle()```. 

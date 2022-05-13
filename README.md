@@ -16,8 +16,8 @@
 ```Button("Delete selection", role: .destructive, action: executeDelete)```
 ```Button { print("Edit button was tapped") } label: {
     Label("Edit", systemImage: "pencil")
-}```. 
-
+}. 
+```
 - Alert messages. 
 ```Button("Show Alert") {
             showingAlert = true
